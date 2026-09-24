@@ -1,6 +1,6 @@
 import pytest
 
-from buildguard import RateLimitGuard
+from gardbuild import RateLimitGuard
 
 
 class FakeClock:

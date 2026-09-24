@@ -2,7 +2,7 @@ from collections.abc import Callable, Mapping
 from datetime import datetime, timezone
 from typing import Any
 
-from buildguard import BudgetGuard, Guard
+from gardbuild import BudgetGuard, Guard
 
 
 class BusinessHoursRule:

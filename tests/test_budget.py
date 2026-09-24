@@ -1,6 +1,6 @@
 import pytest
 
-from buildguard import BudgetGuard
+from gardbuild import BudgetGuard
 
 
 def test_approves_an_amount_at_the_limit():

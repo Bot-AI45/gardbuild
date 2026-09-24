@@ -1,4 +1,4 @@
-from buildguard import PiiGuard
+from gardbuild import PiiGuard
 
 
 def test_masks_credit_cards():

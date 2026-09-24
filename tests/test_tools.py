@@ -1,4 +1,4 @@
-from buildguard import ToolGuard
+from gardbuild import ToolGuard
 
 
 def test_allows_tools_in_the_allowlist():

@@ -1,4 +1,4 @@
-# BuildGuard
+# GardBuild
 
 **Control autonomous AI.** A deterministic guardrail layer that sits between your agent and the
 outside world. Every tool call, payment, burst of activity or outgoing message is approved or
@@ -17,13 +17,13 @@ blocked *before* it happens.
 ## Install
 
 ```bash
-pip install buildguard
+pip install gardbuild
 ```
 
 ## Quickstart
 
 ```python
-from buildguard import BudgetGuard, Guard
+from gardbuild import BudgetGuard, Guard
 
 guard = Guard(budget=BudgetGuard(max_transaction=50.0))
 guard.validate({"type": "payment", "amount": 250.0})
@@ -42,7 +42,7 @@ guard.validate({"type": "payment", "amount": 250.0})
 Stack them into a firewall:
 
 ```python
-from buildguard import BudgetGuard, Guard, PiiGuard, RateLimitGuard, ToolGuard
+from gardbuild import BudgetGuard, Guard, PiiGuard, RateLimitGuard, ToolGuard
 
 guard = Guard(
     budget=BudgetGuard(max_transaction=50.0, max_total=500.0),
@@ -90,7 +90,7 @@ as well if the rule needs to account for approved actions.
 ```python
 from datetime import datetime, timezone
 
-from buildguard import BudgetGuard, Guard
+from gardbuild import BudgetGuard, Guard
 
 
 class BusinessHoursRule:
@@ -113,12 +113,12 @@ See `examples/custom_guardrails.py` for a stateful rule that uses `commit`.
 ## Performance
 
 Every decision is a handful of compiled-regex substitutions and in-memory comparisons, so a full
-four-guardrail pass runs in well under a millisecond — far below the cost of the tool call it
-protects. Measure it on your own hardware:
+four-guardrail pass costs about **16 µs** (CPython 3.14 on Windows, `timeit -n 20000`) — roughly
+0.016 ms, orders of magnitude below the tool call it protects. Measure it on your own hardware:
 
 ```bash
 python -m timeit -s "
-from buildguard import BudgetGuard, Guard, PiiGuard, RateLimitGuard, ToolGuard
+from gardbuild import BudgetGuard, Guard, PiiGuard, RateLimitGuard, ToolGuard
 guard = Guard(
     budget=BudgetGuard(max_transaction=50.0, max_total=500.0),
     rate_limit=RateLimitGuard(max_calls=10**6),
@@ -132,9 +132,9 @@ action = {'type': 'payment', 'amount': 25.0, 'tool': 'search_web', 'note': 'ping
 ## Architecture
 
 ```
-buildguard/
+gardbuild/
 ├── pyproject.toml
-├── src/buildguard/
+├── src/gardbuild/
 │   ├── __init__.py            public API
 │   ├── core.py                Guard gateway, Guardrail protocol
 │   └── guardrails/

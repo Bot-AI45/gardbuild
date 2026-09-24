@@ -1,4 +1,4 @@
-from buildguard import BudgetGuard, Guard, PiiGuard, RateLimitGuard, ToolGuard
+from gardbuild import BudgetGuard, Guard, PiiGuard, RateLimitGuard, ToolGuard
 
 guard = Guard(
     budget=BudgetGuard(max_transaction=50.0, max_total=200.0),

@@ -1,6 +1,6 @@
 import pytest
 
-from buildguard import (
+from gardbuild import (
     APPROVED,
     BLOCKED,
     BudgetGuard,
