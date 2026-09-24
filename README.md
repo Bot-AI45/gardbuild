@@ -4,6 +4,7 @@
 outside world. Every tool call, payment, burst of activity or outgoing message is approved or
 blocked *before* it happens.
 
+[![CI](https://github.com/Bot-AI45/gardbuild/actions/workflows/ci.yml/badge.svg)](https://github.com/Bot-AI45/gardbuild/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Dependencies](https://img.shields.io/badge/runtime%20dependencies-0-brightgreen)
