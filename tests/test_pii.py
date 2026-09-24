@@ -1,3 +1,5 @@
+import pytest
+
 from gardbuild import PiiGuard
 
 
@@ -67,3 +69,20 @@ def test_leaves_non_string_values_alone():
     guard = PiiGuard()
     assert guard.scrub(42) == 42
     assert guard.scrub(None) is None
+
+
+def test_rejects_payloads_nested_beyond_max_depth():
+    guard = PiiGuard()
+    payload = {"note": "ops@example.com"}
+    for _ in range(PiiGuard.MAX_DEPTH):
+        payload = {"nest": payload}
+    with pytest.raises(ValueError):
+        guard.scrub(payload)
+
+
+def test_rejects_cyclic_payloads():
+    guard = PiiGuard()
+    loop = []
+    loop.append(loop)
+    with pytest.raises(ValueError):
+        guard.scrub({"note": loop})

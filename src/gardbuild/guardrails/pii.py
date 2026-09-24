@@ -21,8 +21,11 @@ class PiiGuard:
 
     Text, mappings, lists and tuples are scrubbed recursively. ``patterns``
     adds or overrides rules by name, and ``masks`` overrides the replacement
-    used for a named rule.
+    used for a named rule. Payloads nested deeper than ``MAX_DEPTH`` levels
+    raise ValueError instead of passing through unsanitized.
     """
+
+    MAX_DEPTH = 64
 
     def __init__(
         self,
@@ -37,16 +40,18 @@ class PiiGuard:
             for name, source in {**DEFAULT_PATTERNS, **(patterns or {})}.items()
         }
 
-    def scrub(self, value: Any) -> Any:
+    def scrub(self, value: Any, _depth: int = 0) -> Any:
         """Return a copy of ``value`` with every match replaced by a mask."""
+        if _depth >= self.MAX_DEPTH:
+            raise ValueError("payload nesting exceeds MAX_DEPTH")
         if isinstance(value, str):
             return self._scrub_text(value)
         if isinstance(value, Mapping):
-            return {key: self.scrub(item) for key, item in value.items()}
+            return {key: self.scrub(item, _depth + 1) for key, item in value.items()}
         if isinstance(value, list):
-            return [self.scrub(item) for item in value]
+            return [self.scrub(item, _depth + 1) for item in value]
         if isinstance(value, tuple):
-            return tuple(self.scrub(item) for item in value)
+            return tuple(self.scrub(item, _depth + 1) for item in value)
         return value
 
     def _scrub_text(self, text: str) -> str:

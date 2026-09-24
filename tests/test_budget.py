@@ -72,6 +72,20 @@ def test_rejects_invalid_amounts():
     assert not guard.check({"amount": True})[0]
 
 
+def test_rejects_non_finite_amounts():
+    guard = BudgetGuard(max_transaction=10.0)
+    assert not guard.check({"amount": float("nan")})[0]
+    assert not guard.check({"amount": float("inf")})[0]
+    assert guard.spent == 0.0
+
+
+def test_commit_ignores_non_positive_amounts():
+    guard = BudgetGuard(max_total=100.0)
+    guard.commit({"amount": -5.0})
+    guard.commit({"amount": float("nan")})
+    assert guard.spent == 0.0
+
+
 def test_requires_at_least_one_limit():
     with pytest.raises(ValueError):
         BudgetGuard()

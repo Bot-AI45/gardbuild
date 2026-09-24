@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from collections.abc import Mapping
 from typing import Any
 
@@ -33,8 +34,8 @@ class BudgetGuard:
         if isinstance(amount, bool) or not isinstance(amount, (int, float)):
             return False, f"invalid payment amount: {amount!r}"
         amount = float(amount)
-        if amount < 0:
-            return False, f"invalid payment amount: {amount:.2f}"
+        if not math.isfinite(amount) or amount < 0:
+            return False, f"invalid payment amount: {amount!r}"
         if self.max_transaction is not None and amount > self.max_transaction:
             return False, (
                 f"amount ${amount:.2f} exceeds the per-transaction limit "
@@ -50,11 +51,13 @@ class BudgetGuard:
         return True, ""
 
     def commit(self, action: Mapping[str, Any]) -> None:
-        """Charge an approved amount to the running total."""
+        """Charge a positive, finite amount to the running total."""
         amount = action.get("amount")
         if amount is None or isinstance(amount, bool) or not isinstance(amount, (int, float)):
             return
-        self.spent += float(amount)
+        value = float(amount)
+        if math.isfinite(value) and value > 0:
+            self.spent += value
 
     def reset(self) -> None:
         """Forget all recorded spend."""

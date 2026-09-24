@@ -140,6 +140,15 @@ def test_rejects_non_mapping_actions():
         Guard().validate(["not", "an", "action"])
 
 
+def test_the_guard_snapshots_the_custom_rule_list():
+    rules = [PaymentsOnly()]
+    guard = Guard(guardrails=rules)
+    rules.clear()
+    decision = guard.validate({"amount": 1.0})
+    assert decision["status"] == BLOCKED
+    assert "disabled" in decision["reason"]
+
+
 def test_a_guard_without_rules_approves_everything():
     decision = Guard().validate({"type": "payment", "amount": 10_000.0})
     assert decision["status"] == APPROVED

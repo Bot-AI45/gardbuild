@@ -44,7 +44,7 @@ class Guard:
         guardrails: Iterable[Guardrail] = (),
     ) -> None:
         ordered = [rule for rule in (tools, budget, rate_limit) if rule is not None]
-        ordered.extend(guardrails)
+        ordered.extend(tuple(guardrails))
         for rule in ordered:
             if not callable(getattr(rule, "check", None)):
                 raise TypeError(f"{type(rule).__name__} does not implement check(action)")
