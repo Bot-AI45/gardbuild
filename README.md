@@ -158,6 +158,12 @@ pip install -e ".[dev]"
 pytest
 ```
 
+## Warranty
+
+gardbuild enforces exactly the rules you configure — nothing more. It is not a certified security
+product and not a replacement for code review, testing or compliance work; treat it as one layer
+in your defenses.
+
 ## License
 
 MIT
